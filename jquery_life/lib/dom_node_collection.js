@@ -40,8 +40,69 @@ class DOMNodeCollection {
     }
   }
 
-  
+  attr(name, value) {
+    this.htmlElements.forEach((el) => {
+      el.setAttribute(name, value);
+    });
+  }
 
+  addClass(className) {
+    this.htmlElements.forEach((el) => {
+      el.className = className;
+    });
+  }
+
+  removeClass() {
+    this.addClass("");
+  }
+
+  children() {
+    let result = [];
+    this.htmlElements.forEach((el) => {
+      result = result.concat(Array.from(el.children));
+    });
+    return new DOMNodeCollection(result);
+  }
+
+  parents() {
+    let result = [];
+    this.htmlElements.forEach((el) => {
+      result.push(el.parentElement);
+    });
+    return new DOMNodeCollection(result);
+  }
+
+  find(selector){
+    let result = [];
+    let query;
+    this.htmlElements.forEach((el) => {
+      query = el.querySelectorAll(selector);
+      if (query) {
+        result = result.concat(Array.from(query));
+      }
+    });
+    return new DOMNodeCollection(result);
+  }
+
+  remove() {
+    this.empty();
+    // Might need to change...
+    this.htmlElements = [];
+  }
+
+  on (command, callback) {
+    this.htmlElements.forEach((el) => {
+      el.addEventListener(command, callback);
+      el.callback = callback;
+    });
+  }
+
+  off (command) {
+    this.htmlElements.forEach((el) => {
+      console.log(el.callback);
+      el.removeEventListener(command, el.callback);
+    });
+  }
 }
 
 
