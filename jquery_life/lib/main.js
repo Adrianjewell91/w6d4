@@ -1,6 +1,18 @@
 const DOMNodeCollection = require("./dom_node_collection");
 
 window.$l = function $l(selector) {
+  let funcs = [];
+  if (typeof selector === "function") {
+    funcs.push(selector);
+    if (document.readyState === "complete") {
+      funcs.forEach((el) => {
+        el();
+        funcs.shift();
+      });
+    }
+  }
+
+
   let nodeListVar;
   let nodeListArr;
 
@@ -12,4 +24,6 @@ window.$l = function $l(selector) {
     nodeListArr = Array.from(nodeListVar);
     return new DOMNodeCollection(nodeListArr);
   }
+
+
 };
